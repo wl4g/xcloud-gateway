@@ -15,6 +15,12 @@ spring:
   profiles:
     include: common,support,util
     active: dev
+  cloud: # Spring cloud configuration.
+    # Devops configuration.
+    devops:
+      scm.client: # SCM client configuration.
+        base-uri: http://127.0.0.1:14043/scm-server
+        namespaces: application-${spring.profiles.active}.yml,application.yml
 
 # ### Server configuration. ###
 server:

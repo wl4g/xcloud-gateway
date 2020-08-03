@@ -12,10 +12,7 @@
 		<version>master</version>
 	</parent>
 	<modules>
-		<module>xcloud-gateway-common</module>
-		<module>xcloud-gateway-core</module>
 		<module>xcloud-gateway-server</module>
-		<module>xcloud-gateway-manager</module>
 		<module>xcloud-gateway-example</module>
 	</modules>
 	<properties>

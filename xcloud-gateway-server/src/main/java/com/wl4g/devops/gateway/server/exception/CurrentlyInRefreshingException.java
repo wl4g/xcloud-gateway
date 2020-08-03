@@ -15,7 +15,6 @@
  */
 package com.wl4g.devops.gateway.server.exception;
 
-import com.wl4g.devops.gateway.common.exception.GatewayException;
 
 /**
  * {@link CurrentlyInRefreshingException}
@@ -24,7 +23,7 @@ import com.wl4g.devops.gateway.common.exception.GatewayException;
  * @version v1.0 2020-07-23
  * @since
  */
-public class CurrentlyInRefreshingException extends GatewayException {
+public class CurrentlyInRefreshingException extends RuntimeException {
 
 	private static final long serialVersionUID = -6975908295032696713L;
 

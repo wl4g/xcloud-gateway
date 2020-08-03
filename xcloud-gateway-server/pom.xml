@@ -30,16 +30,19 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.wl4g</groupId>
-			<artifactId>xcloud-shell-cli</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.wl4g</groupId>
 			<artifactId>xcloud-shell-core</artifactId>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>com.wl4g</groupId>
-			<artifactId>xcloud-gateway-common</artifactId>
-		</dependency>
+			<artifactId>xcloud-devops-scm-client</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-webmvc</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>-->
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-gateway</artifactId>
@@ -50,6 +53,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+
 		<!-- TODO: Remove redis depends, use scm -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -24,9 +24,8 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-//@EnableIamClient
 @EnableShellServer
-//@MapperScan("com.wl4g.devops.dao.*")
+//@EnableScmClient
 @SpringBootApplication
 public class GatewayServer {
 
