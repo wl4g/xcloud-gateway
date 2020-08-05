@@ -15,15 +15,17 @@
  */
 package com.wl4g.devops.gateway.controller;
 
-import com.wl4g.devops.components.tools.common.log.SmartLogger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wl4g.components.common.log.SmartLogger;
+
 import javax.servlet.http.HttpServletRequest;
+
+import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
+
 import java.util.Enumeration;
 import java.util.Map;
-
-import static com.wl4g.devops.components.tools.common.log.SmartLoggerFactory.getLogger;
 
 /**
  * {@link GatewayExampleController}

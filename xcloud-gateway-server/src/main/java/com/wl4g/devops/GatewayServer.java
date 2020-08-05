@@ -15,11 +15,12 @@
  */
 package com.wl4g.devops;
 
-import com.wl4g.devops.components.shell.annotation.EnableShellServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+
+import com.wl4g.shell.annotation.EnableShellServer;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

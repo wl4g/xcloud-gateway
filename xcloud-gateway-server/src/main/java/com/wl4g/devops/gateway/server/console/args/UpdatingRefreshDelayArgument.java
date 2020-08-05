@@ -15,11 +15,11 @@
  */
 package com.wl4g.devops.gateway.server.console.args;
 
-import com.wl4g.devops.components.shell.annotation.ShellOption;
-
 import java.io.Serializable;
 
-import static com.wl4g.devops.components.tools.common.lang.Assert2.notNullOf;
+import com.wl4g.shell.annotation.ShellOption;
+
+import static com.wl4g.components.common.lang.Assert2.notNullOf;
 import static org.springframework.util.Assert.isTrue;
 import static org.springframework.util.Assert.notNull;
 

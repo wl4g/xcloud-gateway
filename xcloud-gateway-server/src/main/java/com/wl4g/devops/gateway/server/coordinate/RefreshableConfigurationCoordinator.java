@@ -15,8 +15,8 @@
  */
 package com.wl4g.devops.gateway.server.coordinate;
 
-import com.wl4g.devops.components.tools.common.task.GenericTaskRunner;
-import com.wl4g.devops.components.tools.common.task.RunnerProperties;
+import com.wl4g.components.common.task.GenericTaskRunner;
+import com.wl4g.components.common.task.RunnerProperties;
 import com.wl4g.devops.gateway.server.config.GatewayRefreshProperties;
 import com.wl4g.devops.gateway.server.exception.CurrentlyInRefreshingException;
 import com.wl4g.devops.gateway.server.route.IRouteCacheRefresh;
@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 
-import static com.wl4g.devops.components.tools.common.lang.Assert2.isTrue;
+import static com.wl4g.components.common.lang.Assert2.isTrue;
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;

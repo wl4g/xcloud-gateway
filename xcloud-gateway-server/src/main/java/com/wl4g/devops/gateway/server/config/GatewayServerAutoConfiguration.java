@@ -15,7 +15,7 @@
  */
 package com.wl4g.devops.gateway.server.config;
 
-import com.wl4g.devops.components.tools.common.task.RunnerProperties;
+import com.wl4g.components.common.task.RunnerProperties;
 import com.wl4g.devops.gateway.server.console.GatewayConsole;
 import com.wl4g.devops.gateway.server.coordinate.RefreshableConfigurationCoordinator;
 import com.wl4g.devops.gateway.server.redis.RedisRouteDefinitionRepository;

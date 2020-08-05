@@ -1,20 +1,21 @@
 package com.wl4g.devops.gateway.server.console;
 
-import com.wl4g.devops.components.shell.annotation.ShellComponent;
-import com.wl4g.devops.components.shell.annotation.ShellMethod;
-import com.wl4g.devops.components.shell.handler.SimpleShellContext;
-import com.wl4g.devops.components.tools.common.log.SmartLogger;
-import com.wl4g.devops.components.tools.common.serialize.JacksonUtils;
+import com.wl4g.components.common.log.SmartLogger;
+import com.wl4g.components.common.serialize.JacksonUtils;
 import com.wl4g.devops.gateway.server.config.GatewayRefreshProperties;
 import com.wl4g.devops.gateway.server.console.args.UpdatingRefreshDelayArgument;
 import com.wl4g.devops.gateway.server.coordinate.RefreshableConfigurationCoordinator;
 import com.wl4g.devops.gateway.server.route.AbstractRouteRepository;
 import com.wl4g.devops.gateway.server.route.IRouteCacheRefresh;
+import com.wl4g.shell.annotation.ShellComponent;
+import com.wl4g.shell.annotation.ShellMethod;
+import com.wl4g.shell.handler.SimpleShellContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import reactor.core.publisher.Flux;
 
-import static com.wl4g.devops.components.tools.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 

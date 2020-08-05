@@ -15,7 +15,7 @@
  */
 package com.wl4g.devops.gateway.server.redis;
 
-import com.wl4g.devops.components.tools.common.serialize.JacksonUtils;
+import com.wl4g.components.common.serialize.JacksonUtils;
 import com.wl4g.devops.gateway.server.route.AbstractRouteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
