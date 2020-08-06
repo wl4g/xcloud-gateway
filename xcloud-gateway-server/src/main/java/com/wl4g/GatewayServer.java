@@ -26,63 +26,62 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @EnableShellServer
-//@EnableScmClient
+// @EnableScmClient
 @SpringBootApplication
 public class GatewayServer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(GatewayServer.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(GatewayServer.class, args);
+	}
 
-    //@Bean
-    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-        return builder.routes()
-                //官方demo
-                .route(p -> p
-                        .path("/get")
-                        .filters(f -> f.addRequestHeader("Hello", "World"))
-                        .uri("http://httpbin.org:80"))
-                //自定义
-                .route(p -> p
+	// @Bean
+	public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+		return builder.routes()
+				// 官方demo
+				.route(p -> p.path("/get").filters(f -> f.addRequestHeader("Hello", "World")).uri("http://httpbin.org:80"))
+				// 自定义
+				.route(p -> p
 
-                        //日期时间断言
-                        /*.between(ZonedDateTime.of(2020, 7, 8, 9, 0, 0, 0, ZoneId.systemDefault()),
-                                ZonedDateTime.of(2020, 7, 8, 14, 0, 0, 0, ZoneId.systemDefault())).and()*/
-                        //.before(ZonedDateTime.of(2020,7,8,9,0,0,0, ZoneId.systemDefault()))
-                        .after(ZonedDateTime.of(2020,7,8,14,0,0,0, ZoneId.systemDefault())).and()
+						// 日期时间断言
+						/*
+						 * .between(ZonedDateTime.of(2020, 7, 8, 9, 0, 0, 0,
+						 * ZoneId.systemDefault()), ZonedDateTime.of(2020, 7, 8,
+						 * 14, 0, 0, 0, ZoneId.systemDefault())).and()
+						 */
+						// .before(ZonedDateTime.of(2020,7,8,9,0,0,0,
+						// ZoneId.systemDefault()))
+						.after(ZonedDateTime.of(2020, 7, 8, 14, 0, 0, 0, ZoneId.systemDefault())).and()
 
-                        //cookie断言-- 名称匹配且值符合正则表达式
-                        .cookie("token","[a-zA-Z]+").and()
+						// cookie断言-- 名称匹配且值符合正则表达式
+						.cookie("token", "[a-zA-Z]+").and()
 
-                        //head断言
-                        .header("session").and()
+						// head断言
+						.header("session").and()
 
-                        //host断言??
-                        //.host("**.somehost.org").and()
-                        //.host("**.wl4g.debug").and()
+						// host断言??
+						// .host("**.somehost.org").and()
+						// .host("**.wl4g.debug").and()
 
-                        //method断言
-                        //.method(HttpMethod.GET, HttpMethod.POST).and()
+						// method断言
+						// .method(HttpMethod.GET, HttpMethod.POST).and()
 
-                        //query断言
-                        .query("name").and()
+						// query断言
+						.query("name").and()
 
-                        //remote address 断言
-                        .remoteAddr("10.0.0.113","127.0.0.1","localhost").and()
+						// remote address 断言
+						.remoteAddr("10.0.0.113", "127.0.0.1", "localhost").and()
 
-                        //路径
-                        .path("/**")
-                        //.path("/gateway-example/test/hello")
+						// 路径
+						.path("/**")
+						// .path("/gateway-example/test/hello")
 
-                        //过滤
-                        .filters(f -> f
-                                .addRequestHeader("token", "World")
-                                .addRequestParameter("age", "18")
-                                .addResponseHeader("myResponseheader", "myResponseheader"))
+						// 过滤
+						.filters(f -> f.addRequestHeader("token", "World").addRequestParameter("age", "18")
+								.addResponseHeader("myResponseheader", "myResponseheader"))
 
-                        //目标
-                        .uri("http://localhost:14086"))
-                .build();
-    }
+						// 目标
+						.uri("http://localhost:14086"))
+				.build();
+	}
 
 }
