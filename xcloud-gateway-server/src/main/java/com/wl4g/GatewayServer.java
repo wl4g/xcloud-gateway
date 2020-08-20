@@ -20,7 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 
-import com.wl4g.shell.annotation.EnableShellServer;
+import com.wl4g.shell.springboot.annotation.EnableShellServer;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

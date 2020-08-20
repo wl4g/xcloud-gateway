@@ -17,7 +17,7 @@ package com.wl4g.gateway.server.console.args;
 
 import java.io.Serializable;
 
-import com.wl4g.shell.annotation.ShellOption;
+import com.wl4g.shell.common.annotation.ShellOption;
 
 import static com.wl4g.components.common.lang.Assert2.notNullOf;
 import static org.springframework.util.Assert.isTrue;

@@ -7,9 +7,9 @@ import com.wl4g.gateway.server.console.args.UpdatingRefreshDelayArgument;
 import com.wl4g.gateway.server.coordinate.RefreshableConfigurationCoordinator;
 import com.wl4g.gateway.server.route.AbstractRouteRepository;
 import com.wl4g.gateway.server.route.IRouteCacheRefresh;
-import com.wl4g.shell.annotation.ShellComponent;
-import com.wl4g.shell.annotation.ShellMethod;
-import com.wl4g.shell.handler.SimpleShellContext;
+import com.wl4g.shell.common.annotation.ShellMethod;
+import com.wl4g.shell.core.handler.SimpleShellContext;
+import com.wl4g.shell.springboot.annotation.ShellComponent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteDefinition;
