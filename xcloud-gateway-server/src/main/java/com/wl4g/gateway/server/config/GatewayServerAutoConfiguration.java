@@ -47,7 +47,7 @@ public class GatewayServerAutoConfiguration {
 	}
 
 	@Bean
-	public RefreshableConfigurationCoordinator applicationTaskRunner() {
+	public RefreshableConfigurationCoordinator refreshableConfigurationCoordinator() {
 		return new RefreshableConfigurationCoordinator(new RunnerProperties().withConcurrency(1));
 	}
 
