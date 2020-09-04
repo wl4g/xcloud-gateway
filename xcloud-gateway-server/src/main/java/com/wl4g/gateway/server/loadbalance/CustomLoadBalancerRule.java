@@ -7,7 +7,7 @@ import com.netflix.loadbalancer.Server;
 import com.wl4g.components.common.lang.Assert2;
 import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.components.common.serialize.JacksonUtils;
-import com.wl4g.gateway.server.model.HostWeight;
+import com.wl4g.gateway.server.loadbalance.model.HostWeight;
 
 import org.apache.commons.lang3.RandomUtils;
 

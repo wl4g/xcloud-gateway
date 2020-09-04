@@ -28,13 +28,13 @@ import com.wl4g.components.common.log.SmartLoggerFactory;
 import reactor.core.publisher.Mono;
 
 /**
- * {@link RouteAlterHandler}
+ * {@link RefreshRoutesApplicationListener}
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2020-07-21
  * @since
  */
-public class RouteAlterHandler implements ApplicationListener<RefreshRoutesEvent> {
+public class RefreshRoutesApplicationListener implements ApplicationListener<RefreshRoutesEvent> {
 
 	private final SmartLogger log = SmartLoggerFactory.getLogger(getClass());
 

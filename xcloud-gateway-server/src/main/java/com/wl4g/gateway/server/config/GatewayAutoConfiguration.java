@@ -17,9 +17,15 @@ package com.wl4g.gateway.server.config;
 
 import com.wl4g.components.common.task.RunnerProperties;
 import com.wl4g.gateway.server.console.GatewayConsole;
-import com.wl4g.gateway.server.coordinate.RefreshableConfigurationCoordinator;
-import com.wl4g.gateway.server.redis.RedisRouteDefinitionRepository;
-import com.wl4g.gateway.server.route.RouteAlterHandler;
+import com.wl4g.gateway.server.route.RefreshRoutesApplicationListener;
+import com.wl4g.gateway.server.route.TimingTaskRefresher;
+import com.wl4g.gateway.server.route.repository.RedisRouteDefinitionRepository;
+import com.wl4g.iam.client.handler.DispatcherHandler;
+import com.wl4g.iam.client.handler.WebFluxFilterDispatcherHandler;
+import com.wl4g.iam.client.interceptor.OpenApiWebInterceptor;
+import com.wl4g.iam.client.interceptor.WebIamInterceptor;
+
+import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
@@ -27,18 +33,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * JEDIS properties configuration.
+ * Gateway properties configuration.
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @version v1.0 2018年9月16日
  * @since
  */
 @Configuration
-public class GatewayServerAutoConfiguration {
+public class GatewayAutoConfiguration {
 
 	@Bean
-	public RouteAlterHandler routeAlterHandler() {
-		return new RouteAlterHandler();
+	public RefreshRoutesApplicationListener routeAlterHandler() {
+		return new RefreshRoutesApplicationListener();
 	}
 
 	@Bean
@@ -47,8 +53,8 @@ public class GatewayServerAutoConfiguration {
 	}
 
 	@Bean
-	public RefreshableConfigurationCoordinator refreshableConfigurationCoordinator() {
-		return new RefreshableConfigurationCoordinator(new RunnerProperties().withConcurrency(1));
+	public TimingTaskRefresher refreshableConfigurationCoordinator() {
+		return new TimingTaskRefresher(new RunnerProperties().withConcurrency(1));
 	}
 
 	@Bean
@@ -58,8 +64,20 @@ public class GatewayServerAutoConfiguration {
 
 	@Bean
 	@ConfigurationProperties(prefix = "gateway")
-	public GatewayRefreshProperties gatewayRefreshProperties() {
-		return new GatewayRefreshProperties();
+	public RefreshProperties gatewayRefreshProperties() {
+		return new RefreshProperties();
+	}
+
+	// --- Authenticating. ---
+
+	@Bean
+	public OpenApiWebInterceptor openApiWebInterceptor() {
+		return new OpenApiWebInterceptor();
+	}
+
+	@Bean
+	public DispatcherHandler webFluxFilterDispatcherHandler(List<WebIamInterceptor> interceptors) {
+		return new WebFluxFilterDispatcherHandler(interceptors);
 	}
 
 }

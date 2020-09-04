@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.gateway.server.route;
+package com.wl4g.gateway.server.route.repository;
 
 import com.google.common.collect.Maps;
+import com.wl4g.gateway.server.route.IRouteAlterSubscriber;
+import com.wl4g.gateway.server.route.IRouteCacheRefresh;
+import com.wl4g.gateway.server.route.NotifyType;
+import com.wl4g.gateway.server.route.RefreshRoutesApplicationListener;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.InMemoryRouteDefinitionRepository;
 import org.springframework.cloud.gateway.route.RouteDefinition;
@@ -23,7 +28,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
-import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -34,20 +38,15 @@ import java.util.Map;
  * {@link #notifyAllRefresh(NotifyType)} } and {@link #initSubscriber()} and
  * {@link #flushRoutesPermanentToMemery()}
  *
- * @author: guzhandong
- * @createDate: 2018/10/8 6:30 PM
- * @version: [v1.0]
- * @since [jdk 1.8]
- **/
+ * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
+ * @version v1.0 2020-07-04
+ * @since
+ */
 public abstract class AbstractRouteRepository extends InMemoryRouteDefinitionRepository
 		implements IRouteCacheRefresh, IRouteAlterSubscriber {
 
-	protected static final String DEF_CHARTSET_STR = "UTF-8";
-
-	protected static final Charset DEF_CHARTSET = Charset.forName(DEF_CHARTSET_STR);
-
 	@Autowired
-	private RouteAlterHandler routeAlterHandler;
+	private RefreshRoutesApplicationListener routeAlterHandler;
 
 	protected Mono<Void> notifyAllClientRefresh(NotifyType notifyType) {
 		return routeAlterHandler.refresh(notifyType);

@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.gateway.server.coordinate;
+package com.wl4g.gateway.server.route;
 
 import com.wl4g.components.common.task.GenericTaskRunner;
 import com.wl4g.components.common.task.RunnerProperties;
-import com.wl4g.gateway.server.config.GatewayRefreshProperties;
+import com.wl4g.gateway.server.config.RefreshProperties;
 import com.wl4g.gateway.server.exception.CurrentlyInRefreshingException;
-import com.wl4g.gateway.server.route.IRouteCacheRefresh;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,10 @@ import java.util.concurrent.ScheduledFuture;
  * @version 2019年6月2日
  * @since v1.0
  */
-public class RefreshableConfigurationCoordinator extends GenericTaskRunner<RunnerProperties>
-		implements ApplicationRunner, DisposableBean {
+public class TimingTaskRefresher extends GenericTaskRunner<RunnerProperties> implements ApplicationRunner, DisposableBean {
 
 	@Autowired
-	protected GatewayRefreshProperties config;
+	protected RefreshProperties config;
 
 	@Autowired
 	protected IRouteCacheRefresh refresher;
@@ -52,11 +50,11 @@ public class RefreshableConfigurationCoordinator extends GenericTaskRunner<Runne
 	/** Refreshing scheduled future */
 	protected ScheduledFuture<?> future;
 
-	public RefreshableConfigurationCoordinator() {
+	public TimingTaskRefresher() {
 		super();
 	}
 
-	public RefreshableConfigurationCoordinator(RunnerProperties config) {
+	public TimingTaskRefresher(RunnerProperties config) {
 		super(config);
 	}
 

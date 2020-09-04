@@ -1,5 +1,6 @@
-package com.wl4g.gateway.server.filter;
+package com.wl4g.gateway.server.authc;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -11,30 +12,38 @@ import org.springframework.web.server.ServerWebExchange;
 
 import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.components.common.log.SmartLoggerFactory;
+import com.wl4g.iam.client.handler.WebFluxFilterDispatcherHandler;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 /**
+ * {@link IamOpenApiAuthenticaingFilter}
+ *
+ * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @author vjay
- * @date 2020-07-22 15:31:00
+ * @version v1.0 2020-07-04
+ * @since
  */
 @Component
-public class CustomerTokenFilter implements GlobalFilter, Ordered {
-	private static final SmartLogger log = SmartLoggerFactory.getLogger(CustomerTokenFilter.class);
+public class IamOpenApiAuthenticaingFilter implements GlobalFilter, Ordered {
+	private static final SmartLogger log = SmartLoggerFactory.getLogger(IamOpenApiAuthenticaingFilter.class);
 
-	private static final String REQUEST_TIME_BEGIN = "requestTimeBegin";
+	@Autowired
+	protected WebFluxFilterDispatcherHandler handler;
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-		Map<String, Object> attributes = exchange.getAttributes();
-		System.out.println(attributes);
+		// handler.filter(exchange, chain);
+
+		// Map<String, Object> attributes = exchange.getAttributes();
+		// System.out.println(attributes);
+
 		exchange.getAttributes().put(REQUEST_TIME_BEGIN, System.currentTimeMillis());
-		log.info("contain token " + exchange.getRequest().getHeaders().containsKey("token"));
 		log.info("token is " + exchange.getRequest().getHeaders().get("token"));
+
 		if (exchange.getRequest().getHeaders().containsKey("token")) {
 			return chain.filter(exchange).then(Mono.fromRunnable(() -> {
 				Long startTime = exchange.getAttribute(REQUEST_TIME_BEGIN);
@@ -57,4 +66,7 @@ public class CustomerTokenFilter implements GlobalFilter, Ordered {
 	public int getOrder() {
 		return 0;
 	}
+
+	private static final String REQUEST_TIME_BEGIN = "requestTimeBegin";
+
 }

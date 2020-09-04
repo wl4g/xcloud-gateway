@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wl4g.gateway.server.redis;
+package com.wl4g.gateway.server.route.repository;
 
+import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.components.common.serialize.JacksonUtils;
-import com.wl4g.gateway.server.route.AbstractRouteRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
 
 import java.util.stream.Collectors;
 
@@ -38,21 +38,17 @@ import java.util.stream.Collectors;
  */
 public class RedisRouteDefinitionRepository extends AbstractRouteRepository {
 
-	private final Logger log = LoggerFactory.getLogger(getClass());
+	protected SmartLogger log = getLogger(getClass());
 
 	@Autowired
-	private StringRedisTemplate stringRedisTemplate;
-
-	private static final String REDIS_ROUTE_KEY = "GATEWAY_ROUTE";
-
-	private static final String REDIS_NOTIFY_KEY = "GATEWAY_ROUTE_NOTIFY";
+	private StringRedisTemplate stringTemplate;
 
 	/**
-	 * 获取全部的路由信息
+	 * Gets all routing information
 	 */
 	@Override
 	protected Flux<RouteDefinition> getRouteDefinitionsByPermanent() {
-		return Flux.fromIterable(stringRedisTemplate.opsForHash().values(REDIS_ROUTE_KEY).stream()
+		return Flux.fromIterable(stringTemplate.opsForHash().values(REDIS_ROUTE_KEY).stream()
 				.map(routeDefinition -> JacksonUtils.parseJSON(routeDefinition.toString(), RouteDefinition.class))
 				.collect(Collectors.toList()));
 	}
@@ -60,8 +56,7 @@ public class RedisRouteDefinitionRepository extends AbstractRouteRepository {
 	@Override
 	public Mono<Void> save(Mono<RouteDefinition> route) {
 		return route.flatMap(routeDefinition -> {
-			stringRedisTemplate.opsForHash().put(REDIS_ROUTE_KEY, routeDefinition.getId(),
-					JacksonUtils.toJSONString(routeDefinition));
+			stringTemplate.opsForHash().put(REDIS_ROUTE_KEY, routeDefinition.getId(), JacksonUtils.toJSONString(routeDefinition));
 			return Mono.empty();
 		});
 	}
@@ -69,9 +64,11 @@ public class RedisRouteDefinitionRepository extends AbstractRouteRepository {
 	@Override
 	public Mono<Void> delete(Mono<String> routeId) {
 		return routeId.flatMap(id -> {
-			stringRedisTemplate.opsForHash().delete(REDIS_ROUTE_KEY, id);
+			stringTemplate.opsForHash().delete(REDIS_ROUTE_KEY, id);
 			return Mono.empty();
 		});
 	}
+
+	private static final String REDIS_ROUTE_KEY = "GATEWAY_ROUTE";
 
 }

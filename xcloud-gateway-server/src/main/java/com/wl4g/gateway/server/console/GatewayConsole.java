@@ -2,11 +2,11 @@ package com.wl4g.gateway.server.console;
 
 import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.components.common.serialize.JacksonUtils;
-import com.wl4g.gateway.server.config.GatewayRefreshProperties;
+import com.wl4g.gateway.server.config.RefreshProperties;
 import com.wl4g.gateway.server.console.args.UpdatingRefreshDelayArgument;
-import com.wl4g.gateway.server.coordinate.RefreshableConfigurationCoordinator;
-import com.wl4g.gateway.server.route.AbstractRouteRepository;
 import com.wl4g.gateway.server.route.IRouteCacheRefresh;
+import com.wl4g.gateway.server.route.TimingTaskRefresher;
+import com.wl4g.gateway.server.route.repository.AbstractRouteRepository;
 import com.wl4g.shell.common.annotation.ShellMethod;
 import com.wl4g.shell.core.handler.SimpleShellContext;
 import com.wl4g.shell.springboot.annotation.ShellComponent;
@@ -35,13 +35,13 @@ public class GatewayConsole {
 	protected IRouteCacheRefresh refresher;
 
 	@Autowired
-	protected GatewayRefreshProperties config;
+	protected RefreshProperties config;
 
 	@Autowired
 	private AbstractRouteRepository abstractRouteRepository;
 
 	@Autowired
-	protected RefreshableConfigurationCoordinator coordinator;
+	protected TimingTaskRefresher coordinator;
 
 	/**
 	 * Manual refresh gateway configuration all from cache(redis).

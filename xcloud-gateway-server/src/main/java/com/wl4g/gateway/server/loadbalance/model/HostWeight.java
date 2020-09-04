@@ -1,4 +1,4 @@
-package com.wl4g.gateway.server.model;
+package com.wl4g.gateway.server.loadbalance.model;
 
 import java.io.Serializable;
 
