@@ -20,10 +20,10 @@ import com.wl4g.gateway.server.console.GatewayConsole;
 import com.wl4g.gateway.server.route.RefreshRoutesApplicationListener;
 import com.wl4g.gateway.server.route.TimingTaskRefresher;
 import com.wl4g.gateway.server.route.repository.RedisRouteDefinitionRepository;
-import com.wl4g.iam.client.handler.DispatcherHandler;
-import com.wl4g.iam.client.handler.WebFluxFilterDispatcherHandler;
-import com.wl4g.iam.client.interceptor.OpenApiWebInterceptor;
-import com.wl4g.iam.client.interceptor.WebIamInterceptor;
+import com.wl4g.iam.client.core.RequestMappingDispatcher;
+import com.wl4g.iam.client.core.WebFluxFilterMappingDispatcher;
+import com.wl4g.iam.client.handler.StandardSignApiWebHandler;
+import com.wl4g.iam.client.handler.WebIamHandler;
 
 import java.util.List;
 
@@ -71,13 +71,13 @@ public class GatewayAutoConfiguration {
 	// --- Authenticating. ---
 
 	@Bean
-	public OpenApiWebInterceptor openApiWebInterceptor() {
-		return new OpenApiWebInterceptor();
+	public StandardSignApiWebHandler standardSignApiWebHandler() {
+		return new StandardSignApiWebHandler();
 	}
 
 	@Bean
-	public DispatcherHandler webFluxFilterDispatcherHandler(List<WebIamInterceptor> interceptors) {
-		return new WebFluxFilterDispatcherHandler(interceptors);
+	public RequestMappingDispatcher webFluxFilterMappingDispatcher(List<WebIamHandler> interceptors) {
+		return new WebFluxFilterMappingDispatcher(interceptors);
 	}
 
 }

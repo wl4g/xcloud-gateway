@@ -12,7 +12,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.components.common.log.SmartLoggerFactory;
-import com.wl4g.iam.client.handler.WebFluxFilterDispatcherHandler;
+import com.wl4g.iam.client.core.WebFluxFilterMappingDispatcher;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,7 +32,7 @@ public class IamOpenApiAuthenticaingFilter implements GlobalFilter, Ordered {
 	private static final SmartLogger log = SmartLoggerFactory.getLogger(IamOpenApiAuthenticaingFilter.class);
 
 	@Autowired
-	protected WebFluxFilterDispatcherHandler handler;
+	protected WebFluxFilterMappingDispatcher handler;
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
