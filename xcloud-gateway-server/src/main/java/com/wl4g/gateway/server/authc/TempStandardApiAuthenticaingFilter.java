@@ -16,6 +16,8 @@ import org.springframework.web.server.ServerWebExchange;
 //import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.Hashing;
 import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.components.common.web.rest.RespBase;
@@ -33,6 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@link TempStandardApiAuthenticaingFilter}
@@ -72,6 +75,12 @@ public class TempStandardApiAuthenticaingFilter implements GlobalFilter, Ordered
 			return writeResponse(4000, "Invalid parameters", exchange);
 		}
 
+		// Check replay signature
+		if (signReplayValidityStore.asMap().containsKey(signature)) {
+			log.warn("Invalid signature locked. signature: {}, appId: {}", signature, appId);
+			return writeResponse(4023, "Invalid signature locked", exchange);
+		}
+
 		// Gets stored appSecret token.
 		String storedAppSecret = getenv("IAM_AUTHC_SIGN_APPSECRET_".concat(appId));
 		hasTextOf(storedAppSecret, "storedAppSecret");
@@ -92,12 +101,15 @@ public class TempStandardApiAuthenticaingFilter implements GlobalFilter, Ordered
 		// Signature assertion
 		try {
 			if (!isEqual(sign, Hex.decodeHex(signature.toCharArray()))) {
-				log.warn("Invalid signature. sign: {}, request sign: {}", new String(sign), signature);
+				log.warn("Illegal signature. sign: {}, request sign: {}", new String(sign), signature);
 				return writeResponse(4003, "Invalid signature", exchange);
 			}
 		} catch (DecoderException e) {
 			return writeResponse(4003, "Invalid signature", exchange);
 		}
+
+		// Save signature
+		signReplayValidityStore.put(signature, appId);
 
 		return chain.filter(exchange);
 
@@ -170,5 +182,8 @@ public class TempStandardApiAuthenticaingFilter implements GlobalFilter, Ordered
 		}
 		return stringBuffer.toString();
 	}
+
+	private final static Cache<String, String> signReplayValidityStore = CacheBuilder.newBuilder()
+			.expireAfterWrite(20, TimeUnit.MINUTES).build();
 
 }
