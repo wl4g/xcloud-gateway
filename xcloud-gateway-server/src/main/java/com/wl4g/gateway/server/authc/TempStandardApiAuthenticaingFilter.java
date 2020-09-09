@@ -1,10 +1,13 @@
 package com.wl4g.gateway.server.authc;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 //import org.springframework.core.io.buffer.DataBuffer;
 //import org.springframework.http.HttpStatus;
@@ -20,16 +23,16 @@ import com.wl4g.components.common.web.rest.RespBase;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.wl4g.components.common.lang.Assert2.hasTextOf;
 import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
-import static com.wl4g.components.common.web.WebUtils2.getMultiMapFirstValue;
 import static java.lang.System.getenv;
 import static java.security.MessageDigest.isEqual;
 import static org.apache.commons.lang3.StringUtils.isAnyEmpty;
 import static org.springframework.http.HttpStatus.OK;
 import static reactor.core.publisher.Flux.just;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 /**
  * {@link TempStandardApiAuthenticaingFilter}
@@ -47,14 +50,23 @@ public class TempStandardApiAuthenticaingFilter implements GlobalFilter, Ordered
 		return 0;
 	}
 
+	/**
+	 * for example: </br>
+	 * 
+	 * <pre>
+	 * storedAppSecret=5aUpyX5X7wzC8iLgFNJuxqj3xJdNQw8yS
+	 * 
+	 * curl http://wl4g.debug:14085/openapi/v2/test?appId=oi554a94bc416e4edd9ff963ed0e9e25e6c10545&nonce=0L9GyULPfwsD3Swg&timestamp=1599637679878&signature=5ac8747ccc2b1b332e8445b496d0c38529b38fba2c1b8ca8490cbf2932e06943
+	 * 
+	 * </pre>
+	 */
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
-		Map<String, List<String>> params = exchange.getRequest().getQueryParams();
-		String appId = getMultiMapFirstValue(params, "appId");
-		String nonce = getMultiMapFirstValue(params, "nonce");
-		String timestamp = getMultiMapFirstValue(params, "timestamp");
-		String signature = getMultiMapFirstValue(params, "signature");
+		MultiValueMap<String, String> params = exchange.getRequest().getQueryParams();
+		String appId = params.getFirst("appId");
+		String nonce = params.getFirst("nonce");
+		String timestamp = params.getFirst("timestamp");
+		String signature = params.getFirst("signature");
 		if (isAnyEmpty(appId, nonce, timestamp, signature)) {
 			log.warn("appId/nonce/timestamp/signature is requires");
 			return writeResponse(4000, "Invalid parameters", exchange);
@@ -63,12 +75,11 @@ public class TempStandardApiAuthenticaingFilter implements GlobalFilter, Ordered
 		// Gets stored appSecret token.
 		String storedAppSecret = getenv("IAM_AUTHC_SIGN_APPSECRET_".concat(appId));
 		hasTextOf(storedAppSecret, "storedAppSecret");
-		byte[] storedAppSecretBuf = storedAppSecret.getBytes(UTF_8);
 
 		// Join token parts
 		StringBuffer signtext = new StringBuffer();
 		signtext.append(appId);
-		signtext.append(storedAppSecretBuf);
+		signtext.append(storedAppSecret);
 		signtext.append(timestamp);
 		signtext.append(nonce);
 
@@ -79,9 +90,13 @@ public class TempStandardApiAuthenticaingFilter implements GlobalFilter, Ordered
 		byte[] sign = Hashing.sha256().hashBytes(signInput).asBytes();
 
 		// Signature assertion
-		if (!isEqual(sign, signature.getBytes(UTF_8))) {
-			log.warn("Invalid signature. sign: {}, request sign: {}", new String(sign), signature);
-			return writeResponse(4001, "Invalid signature", exchange);
+		try {
+			if (!isEqual(sign, Hex.decodeHex(signature.toCharArray()))) {
+				log.warn("Invalid signature. sign: {}, request sign: {}", new String(sign), signature);
+				return writeResponse(4003, "Invalid signature", exchange);
+			}
+		} catch (DecoderException e) {
+			return writeResponse(4003, "Invalid signature", exchange);
 		}
 
 		return chain.filter(exchange);
@@ -121,5 +136,39 @@ public class TempStandardApiAuthenticaingFilter implements GlobalFilter, Ordered
 	}
 
 	// private static final String REQUEST_TIME_BEGIN = "requestTimeBegin";
+
+	/**
+	 * Digesting string with sha256
+	 * 
+	 * @param str
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static String getSha256(String str) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+		messageDigest.update(str.getBytes("UTF-8"));
+		return byte2Hex(messageDigest.digest());
+	}
+
+	/**
+	 * Bytes to hex string
+	 * 
+	 * @param bytes
+	 * @return
+	 */
+	public static String byte2Hex(byte[] bytes) {
+		StringBuffer stringBuffer = new StringBuffer();
+		String temp = null;
+		for (int i = 0; i < bytes.length; i++) {
+			temp = Integer.toHexString(bytes[i] & 0xFF);
+			if (temp.length() == 1) {
+				// 1 to get a bit of the complement 0 operation
+				stringBuffer.append("0");
+			}
+			stringBuffer.append(temp);
+		}
+		return stringBuffer.toString();
+	}
 
 }

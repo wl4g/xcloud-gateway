@@ -22,11 +22,11 @@ spring:
         base-uri: http://127.0.0.1:14043/scm-server
         namespaces: application-${spring.profiles.active}.yml,application.yml
     gateway:
-      routers:
-        - id: openapi
+      routes:
+        - id: openapiV2-service
           uri: http://baidu.com
           predicates:
-            - path=/v2
+            - Path=/openapi/v2/**
             #- Weight=service1,5
 
 # ### Server configuration. ###

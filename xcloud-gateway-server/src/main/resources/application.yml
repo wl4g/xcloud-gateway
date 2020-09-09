@@ -30,4 +30,4 @@ logging:
         cloud:
           gateway: TRACE
     com:
-      wl4g: DEBUG
+      wl4g: TRACE
