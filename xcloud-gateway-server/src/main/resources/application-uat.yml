@@ -20,6 +20,11 @@ spring:
       pool:
         max-active: 10
         max-wait: -1ms
+  cloud:
+    gateway:
+      routes:
+        - id: openapiV2-service
+          uri: http://localhost:28092
 
 # Redis configuration.
 #redis:
