@@ -18,16 +18,20 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * {@link CanaryLoadBalancerRule}
+ *
+ * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
  * @author vjay
- * @date 2020-07-22 14:41:00
+ * @date 2020-07-22
+ * @since
  */
-public class CustomLoadBalancerRule extends AbstractLoadBalancerRule {
+public class CanaryLoadBalancerRule extends AbstractLoadBalancerRule {
 
-	final private SmartLogger log = getLogger(getClass());
+	final protected SmartLogger log = getLogger(getClass());
 
 	@Override
-	public void initWithNiwsConfig(IClientConfig iClientConfig) {
-		System.out.println(iClientConfig);
+	public void initWithNiwsConfig(IClientConfig config) {
+		System.out.println(config);
 	}
 
 	@Override

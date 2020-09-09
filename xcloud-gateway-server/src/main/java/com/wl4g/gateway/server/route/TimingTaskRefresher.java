@@ -51,11 +51,7 @@ public class TimingTaskRefresher extends GenericTaskRunner<RunnerProperties> imp
 	protected ScheduledFuture<?> future;
 
 	public TimingTaskRefresher() {
-		super();
-	}
-
-	public TimingTaskRefresher(RunnerProperties config) {
-		super(config);
+		super(new RunnerProperties().withConcurrency(1));
 	}
 
 	@Override

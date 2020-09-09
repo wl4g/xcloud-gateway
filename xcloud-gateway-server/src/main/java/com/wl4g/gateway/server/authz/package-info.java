@@ -17,7 +17,7 @@
  * {@link package-info} 
  *
  * @author Wangl.sir <wanglsir@gmail.com, 983708408@qq.com>
- * @version v1.0 2020-07-21
+ * @version v1.0 2020-09-09
  * @since
  */
-package com.wl4g.gateway;
+package com.wl4g.gateway.server.authz;

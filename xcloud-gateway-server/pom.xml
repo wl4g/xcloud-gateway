@@ -31,6 +31,7 @@
 			<groupId>com.wl4g</groupId>
 			<artifactId>xcloud-shell-springboot</artifactId>
 		</dependency>
+
 		<!-- <dependency> -->
 		<!-- <groupId>com.wl4g</groupId> -->
 		<!-- <artifactId>xcloud-devops-scm-client</artifactId> -->
@@ -41,16 +42,18 @@
 		<!-- </exclusion> -->
 		<!-- </exclusions> -->
 		<!-- </dependency> -->
-		<dependency>
-			<groupId>com.wl4g</groupId>
-			<artifactId>xcloud-iam-client-java</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring-webmvc</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>com.wl4g</groupId> -->
+		<!-- <artifactId>xcloud-iam-client-springboot</artifactId> -->
+		<!-- <exclusions> -->
+		<!-- <exclusion> -->
+		<!-- <artifactId>spring-webmvc</artifactId> -->
+		<!-- <groupId>org.springframework</groupId> -->
+		<!-- </exclusion> -->
+		<!-- </exclusions> -->
+		<!-- </dependency> -->
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-gateway</artifactId>

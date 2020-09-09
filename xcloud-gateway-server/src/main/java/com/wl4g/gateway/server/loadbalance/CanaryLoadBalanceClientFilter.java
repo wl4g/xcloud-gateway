@@ -24,7 +24,6 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
  * @since
  */
 @SuppressWarnings("deprecation")
-// @Component
 public class CanaryLoadBalanceClientFilter extends LoadBalancerClientFilter {
 
 	public CanaryLoadBalanceClientFilter(LoadBalancerClient loadBalancer, LoadBalancerProperties properties) {

@@ -15,22 +15,17 @@
  */
 package com.wl4g.gateway.server.config;
 
-import com.wl4g.components.common.task.RunnerProperties;
-import com.wl4g.gateway.server.console.GatewayConsole;
-import com.wl4g.gateway.server.route.RefreshRoutesApplicationListener;
-import com.wl4g.gateway.server.route.TimingTaskRefresher;
-import com.wl4g.gateway.server.route.repository.RedisRouteDefinitionRepository;
-import com.wl4g.iam.client.core.RequestMappingDispatcher;
-import com.wl4g.iam.client.core.WebFluxFilterMappingDispatcher;
-import com.wl4g.iam.client.handler.StandardSignApiWebHandler;
-import com.wl4g.iam.client.handler.WebIamHandler;
-
-import java.util.List;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
+//import com.wl4g.gateway.server.console.GatewayConsole;
+//import com.wl4g.gateway.server.route.RefreshRoutesApplicationListener;
+//import com.wl4g.gateway.server.route.TimingTaskRefresher;
+//import com.wl4g.gateway.server.route.repository.RedisRouteDefinitionRepository;
+//
+//import org.springframework.boot.context.properties.ConfigurationProperties;
+//import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.wl4g.gateway.server.authc.TempStandardApiAuthenticaingFilter;
 
 /**
  * Gateway properties configuration.
@@ -42,42 +37,36 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayAutoConfiguration {
 
-	@Bean
-	public RefreshRoutesApplicationListener routeAlterHandler() {
-		return new RefreshRoutesApplicationListener();
-	}
+	// @Bean
+	// @ConfigurationProperties(prefix = "gateway")
+	// public RefreshProperties refreshProperties() {
+	// return new RefreshProperties();
+	// }
+	//
+	// @Bean
+	// public RefreshRoutesApplicationListener
+	// refreshRoutesApplicationListener() {
+	// return new RefreshRoutesApplicationListener();
+	// }
+	//
+	// @Bean
+	// public RouteDefinitionRepository redisRouteDefinitionRepository() {
+	// return new RedisRouteDefinitionRepository();
+	// }
+	//
+	// @Bean
+	// public TimingTaskRefresher timingTaskRefresher() {
+	// return new TimingTaskRefresher();
+	// }
+	//
+	// @Bean
+	// public GatewayConsole gatewayConsole() {
+	// return new GatewayConsole();
+	// }
 
 	@Bean
-	public RouteDefinitionRepository redisRouteDefinitionRepository() {
-		return new RedisRouteDefinitionRepository();
-	}
-
-	@Bean
-	public TimingTaskRefresher refreshableConfigurationCoordinator() {
-		return new TimingTaskRefresher(new RunnerProperties().withConcurrency(1));
-	}
-
-	@Bean
-	public GatewayConsole gatewayConsole() {
-		return new GatewayConsole();
-	}
-
-	@Bean
-	@ConfigurationProperties(prefix = "gateway")
-	public RefreshProperties gatewayRefreshProperties() {
-		return new RefreshProperties();
-	}
-
-	// --- Authenticating. ---
-
-	@Bean
-	public StandardSignApiWebHandler standardSignApiWebHandler() {
-		return new StandardSignApiWebHandler();
-	}
-
-	@Bean
-	public RequestMappingDispatcher webFluxFilterMappingDispatcher(List<WebIamHandler> interceptors) {
-		return new WebFluxFilterMappingDispatcher(interceptors);
+	public TempStandardApiAuthenticaingFilter tempStandardApiAuthenticaingFilter() {
+		return new TempStandardApiAuthenticaingFilter();
 	}
 
 }

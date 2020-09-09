@@ -1,5 +1,8 @@
 package com.wl4g.gateway.server.config;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * {@link RefreshProperties}
  *
@@ -7,16 +10,10 @@ package com.wl4g.gateway.server.config;
  * @version v1.0 2020-07-23
  * @since
  */
+@Getter
+@Setter
 public class RefreshProperties {
 
 	private Long refreshDelayMs = 5_000L;
-
-	public Long getRefreshDelayMs() {
-		return refreshDelayMs;
-	}
-
-	public void setRefreshDelayMs(Long refreshDelayMs) {
-		this.refreshDelayMs = refreshDelayMs;
-	}
 
 }
