@@ -20,11 +20,6 @@ spring:
       pool:
         max-active: 10
         max-wait: -1ms
-  cloud:
-    gateway:
-      routes:
-        - id: openapiV2-service
-          uri: https://www.baidu.com
 
 # Redis configuration.
 #redis:

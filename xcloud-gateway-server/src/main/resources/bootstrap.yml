@@ -24,6 +24,7 @@ spring:
     gateway:
       routes:
         - id: openapiV2-service
+          #uri: http://openapi.wl4gsafecloudcs.com
           uri: https://www.baidu.com
           predicates:
             - Path=/openapi/v2/**
