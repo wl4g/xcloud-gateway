@@ -1,13 +1,20 @@
 package com.wl4g.gateway.server.bridge;
 
-import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
+import org.springframework.web.server.ServerWebExchange;
 
 import static com.wl4g.components.common.lang.Assert2.notNullOf;
+import static java.lang.String.valueOf;
+import static java.util.Collections.singletonList;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -20,234 +27,208 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class WebfluxHttpServletResponse implements HttpServletResponse {
 
-	/** {@link ServerHttpResponse} */
-	protected final ServerHttpResponse response;
+	/** {@link ServerHttpRequest} */
+	protected final ServerWebExchange exchange;
 
-	public WebfluxHttpServletResponse(ServerHttpResponse response) {
-		notNullOf(response, "response");
-		this.response = response;
-	}
-
-	@Override
-	public String getCharacterEncoding() {
-		// TODO Auto-generated method stub
-		return null;
+	public WebfluxHttpServletResponse(ServerWebExchange exchange) {
+		notNullOf(exchange, "exchange");
+		this.exchange = exchange;
 	}
 
 	@Override
 	public String getContentType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ServletOutputStream getOutputStream() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PrintWriter getWriter() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setCharacterEncoding(String charset) {
-		// TODO Auto-generated method stub
-
+		return exchange.getResponse().getHeaders().getContentType().toString();
 	}
 
 	@Override
 	public void setContentLength(int len) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().setContentLength(len);
 	}
 
 	@Override
 	public void setContentLengthLong(long len) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().setContentLength(len);
 	}
 
 	@Override
 	public void setContentType(String type) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setBufferSize(int size) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public int getBufferSize() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void flushBuffer() throws IOException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resetBuffer() {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().setContentType(MediaType.valueOf(type));
 	}
 
 	@Override
 	public boolean isCommitted() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-
+		return exchange.getResponse().isCommitted();
 	}
 
 	@Override
 	public void setLocale(Locale loc) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().setAcceptLanguageAsLocales(singletonList(loc));
 	}
 
 	@Override
 	public Locale getLocale() {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Locale> loc = exchange.getResponse().getHeaders().getAcceptLanguageAsLocales().stream().findFirst();
+		return loc.isPresent() ? loc.get() : null;
 	}
 
 	@Override
-	public void addCookie(Cookie cookie) {
-		// TODO Auto-generated method stub
-
+	public void addCookie(Cookie c) {
+		exchange.getResponse().addCookie(ResponseCookie.from(c.getName(), c.getValue()).domain(c.getDomain())
+				.httpOnly(c.isHttpOnly()).maxAge(c.getMaxAge()).path(c.getPath()).secure(c.getSecure()).build());
 	}
 
 	@Override
 	public boolean containsHeader(String name) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String encodeURL(String url) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String encodeRedirectURL(String url) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String encodeUrl(String url) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String encodeRedirectUrl(String url) {
-		// TODO Auto-generated method stub
-		return null;
+		return exchange.getResponse().getHeaders().containsKey(name);
 	}
 
 	@Override
 	public void sendError(int sc, String msg) throws IOException {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().setStatusCode(HttpStatus.valueOf(sc));
+		// TODO
 	}
 
 	@Override
 	public void sendError(int sc) throws IOException {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().setStatusCode(HttpStatus.valueOf(sc));
+		// TODO
 	}
 
 	@Override
 	public void sendRedirect(String location) throws IOException {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().setLocation(URI.create(location));
 	}
 
 	@Override
 	public void setDateHeader(String name, long date) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().setDate(name, date);
 	}
 
 	@Override
 	public void addDateHeader(String name, long date) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().add(name, valueOf(date));
 	}
 
 	@Override
 	public void setHeader(String name, String value) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().set(name, value);
 	}
 
 	@Override
 	public void addHeader(String name, String value) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().add(name, value);
 	}
 
 	@Override
 	public void setIntHeader(String name, int value) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().getHeaders().set(name, valueOf(value));
 	}
 
 	@Override
 	public void addIntHeader(String name, int value) {
-		// TODO Auto-generated method stub
+		exchange.getResponse().getHeaders().add(name, valueOf(value));
 
 	}
 
 	@Override
 	public void setStatus(int sc) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().setStatusCode(HttpStatus.valueOf(sc));
 	}
 
 	@Override
 	public void setStatus(int sc, String sm) {
-		// TODO Auto-generated method stub
-
+		exchange.getResponse().setStatusCode(HttpStatus.valueOf(sc));
+		// TODO
 	}
 
 	@Override
 	public int getStatus() {
-		// TODO Auto-generated method stub
-		return 0;
+		return exchange.getResponse().getStatusCode().value();
 	}
 
 	@Override
 	public String getHeader(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return exchange.getResponse().getHeaders().getFirst(name);
 	}
 
 	@Override
 	public Collection<String> getHeaders(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return exchange.getResponse().getHeaders().get(name);
 	}
 
 	@Override
 	public Collection<String> getHeaderNames() {
-		// TODO Auto-generated method stub
+		return exchange.getResponse().getHeaders().keySet();
+	}
+
+	@Override
+	public String getCharacterEncoding() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setCharacterEncoding(String charset) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setBufferSize(int size) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public int getBufferSize() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void flushBuffer() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void resetBuffer() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void reset() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String encodeURL(String url) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see {@link org.apache.shiro.web.servlet.ShiroHttpServletResponse#encodeRedirectURL(String)}
+	 */
+	@Override
+	public String encodeRedirectURL(String url) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Deprecated
+	@Override
+	public String encodeUrl(String url) {
 		return null;
+	}
+
+	@Deprecated
+	@Override
+	public String encodeRedirectUrl(String url) {
+		return null;
+	}
+
+	@Override
+	public ServletOutputStream getOutputStream() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public PrintWriter getWriter() throws IOException {
+		throw new UnsupportedOperationException();
 	}
 
 }

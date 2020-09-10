@@ -85,16 +85,6 @@ public class WebfluxHttpServletRequest implements HttpServletRequest {
 	}
 
 	@Override
-	public String getCharacterEncoding() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setCharacterEncoding(String env) throws UnsupportedEncodingException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public int getContentLength() {
 		return safeLongToInt(exchange.getRequest().getHeaders().getContentLength());
 	}
@@ -110,11 +100,6 @@ public class WebfluxHttpServletRequest implements HttpServletRequest {
 		// return
 		// mediaType.getType().concat("/").concat(mediaType.getSubtype());
 		return mediaType.toString();
-	}
-
-	@Override
-	public ServletInputStream getInputStream() throws IOException {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -165,11 +150,6 @@ public class WebfluxHttpServletRequest implements HttpServletRequest {
 	@Override
 	public int getServerPort() {
 		return exchange.getRequest().getHeaders().getHost().getPort();
-	}
-
-	@Override
-	public BufferedReader getReader() throws IOException {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -224,6 +204,150 @@ public class WebfluxHttpServletRequest implements HttpServletRequest {
 	}
 
 	@Override
+	public Cookie[] getCookies() {
+		if (isNull(this.cookiesCache)) {
+			synchronized (this) {
+				if (isNull(this.cookiesCache)) {
+					this.cookiesCache = safeMap(exchange.getRequest().getCookies()).values().stream()
+							.map(cs -> safeList(cs).stream().map(c -> convertHttpCookie(c))).collect(toList())
+							.toArray(new Cookie[] {});
+				}
+			}
+		}
+		return this.cookiesCache;
+	}
+
+	@Override
+	public long getDateHeader(String name) {
+		return exchange.getRequest().getHeaders().getFirstDate(name);
+	}
+
+	@Override
+	public String getHeader(String name) {
+		return exchange.getRequest().getHeaders().getFirst(name);
+	}
+
+	@Override
+	public Enumeration<String> getHeaders(String name) {
+		return enumeration(safeList(exchange.getRequest().getHeaders().get(name)));
+	}
+
+	@Override
+	public Enumeration<String> getHeaderNames() {
+		return enumeration(safeSet(exchange.getRequest().getHeaders().keySet()));
+	}
+
+	@Override
+	public int getIntHeader(String name) {
+		return Integer.parseInt(exchange.getRequest().getHeaders().getFirst(name));
+	}
+
+	@Override
+	public String getMethod() {
+		return exchange.getRequest().getMethodValue();
+	}
+
+	@Override
+	public String getContextPath() {
+		return exchange.getRequest().getPath().contextPath().value();
+	}
+
+	@Override
+	public String getQueryString() {
+		if (isNull(queryStringCache)) {
+			synchronized (this) {
+				if (isNull(queryStringCache)) {
+					StringBuffer queryString = new StringBuffer(32);
+					Iterator<Entry<String, List<String>>> its = exchange.getRequest().getQueryParams().entrySet().iterator();
+					while (its.hasNext()) {
+						Entry<String, List<String>> ent = its.next();
+						String name = ent.getKey();
+						List<String> vals = ent.getValue();
+						// keyvalues
+						queryString.append(name);
+						queryString.append("=");
+						Iterator<String> it = vals.iterator();
+						while (it.hasNext()) {
+							queryString.append(it.next());
+							if (it.hasNext()) {
+								queryString.append(",");
+							}
+						}
+						// keyvalues part
+						if (its.hasNext()) {
+							queryString.append("&");
+						}
+					}
+					this.queryStringCache = queryString.toString();
+				}
+			}
+		}
+		return queryStringCache;
+	}
+
+	@Override
+	public String getRemoteUser() {
+		return exchange.getRequest().getURI().getUserInfo();
+	}
+
+	@Override
+	public String getRequestedSessionId() {
+		return null; // @see shiro
+	}
+
+	@Override
+	public String getRequestURI() {
+		// @see shiro
+		return exchange.getRequest().getURI().getPath();
+	}
+
+	@Override
+	public StringBuffer getRequestURL() {
+		// @see shiro
+		return new StringBuffer(exchange.getRequest().getURI().toString());
+	}
+
+	@Override
+	public boolean isRequestedSessionIdValid() {
+		return true; // @see shiro
+	}
+
+	@Override
+	public boolean isRequestedSessionIdFromCookie() {
+		return true; // @see shiro
+	}
+
+	@Override
+	public boolean isRequestedSessionIdFromURL() {
+		return false; // @see shiro
+	}
+
+	@Override
+	public boolean isRequestedSessionIdFromUrl() {
+		return false; // @see shiro
+	}
+
+	@Override
+	public BufferedReader getReader() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getCharacterEncoding() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setCharacterEncoding(String env) throws UnsupportedEncodingException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public ServletInputStream getInputStream() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public RequestDispatcher getRequestDispatcher(String path) {
 		throw new UnsupportedOperationException();
 	}
@@ -274,50 +398,6 @@ public class WebfluxHttpServletRequest implements HttpServletRequest {
 	}
 
 	@Override
-	public Cookie[] getCookies() {
-		if (isNull(this.cookiesCache)) {
-			synchronized (this) {
-				if (isNull(this.cookiesCache)) {
-					this.cookiesCache = safeMap(exchange.getRequest().getCookies()).values().stream()
-							.map(cs -> safeList(cs).stream().map(c -> convertHttpCookie(c))).collect(toList())
-							.toArray(new Cookie[] {});
-				}
-			}
-		}
-		return this.cookiesCache;
-	}
-
-	@Override
-	public long getDateHeader(String name) {
-		return exchange.getRequest().getHeaders().getFirstDate(name);
-	}
-
-	@Override
-	public String getHeader(String name) {
-		return exchange.getRequest().getHeaders().getFirst(name);
-	}
-
-	@Override
-	public Enumeration<String> getHeaders(String name) {
-		return enumeration(safeList(exchange.getRequest().getHeaders().get(name)));
-	}
-
-	@Override
-	public Enumeration<String> getHeaderNames() {
-		return enumeration(safeSet(exchange.getRequest().getHeaders().keySet()));
-	}
-
-	@Override
-	public int getIntHeader(String name) {
-		return Integer.parseInt(exchange.getRequest().getHeaders().getFirst(name));
-	}
-
-	@Override
-	public String getMethod() {
-		return exchange.getRequest().getMethodValue();
-	}
-
-	@Override
 	public String getPathInfo() {
 		throw new UnsupportedOperationException();
 	}
@@ -328,49 +408,6 @@ public class WebfluxHttpServletRequest implements HttpServletRequest {
 	}
 
 	@Override
-	public String getContextPath() {
-		return exchange.getRequest().getPath().contextPath().value();
-	}
-
-	@Override
-	public String getQueryString() {
-		if (isNull(queryStringCache)) {
-			synchronized (this) {
-				if (isNull(queryStringCache)) {
-					StringBuffer queryString = new StringBuffer(32);
-					Iterator<Entry<String, List<String>>> its = exchange.getRequest().getQueryParams().entrySet().iterator();
-					while (its.hasNext()) {
-						Entry<String, List<String>> ent = its.next();
-						String name = ent.getKey();
-						List<String> vals = ent.getValue();
-						// keyvalues
-						queryString.append(name);
-						queryString.append("=");
-						Iterator<String> it = vals.iterator();
-						while (it.hasNext()) {
-							queryString.append(it.next());
-							if (it.hasNext()) {
-								queryString.append(",");
-							}
-						}
-						// keyvalues part
-						if (its.hasNext()) {
-							queryString.append("&");
-						}
-					}
-					this.queryStringCache = queryString.toString();
-				}
-			}
-		}
-		return queryStringCache;
-	}
-
-	@Override
-	public String getRemoteUser() {
-		return exchange.getRequest().getURI().getUserInfo();
-	}
-
-	@Override
 	public boolean isUserInRole(String role) {
 		throw new UnsupportedOperationException();
 	}
@@ -378,23 +415,6 @@ public class WebfluxHttpServletRequest implements HttpServletRequest {
 	@Override
 	public Principal getUserPrincipal() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getRequestedSessionId() {
-		return null; // @see shiro
-	}
-
-	@Override
-	public String getRequestURI() {
-		// @see shiro
-		return exchange.getRequest().getURI().getPath();
-	}
-
-	@Override
-	public StringBuffer getRequestURL() {
-		// @see shiro
-		return new StringBuffer(exchange.getRequest().getURI().toString());
 	}
 
 	@Override
@@ -415,26 +435,6 @@ public class WebfluxHttpServletRequest implements HttpServletRequest {
 	@Override
 	public String changeSessionId() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isRequestedSessionIdValid() {
-		return true; // @see shiro
-	}
-
-	@Override
-	public boolean isRequestedSessionIdFromCookie() {
-		return true; // @see shiro
-	}
-
-	@Override
-	public boolean isRequestedSessionIdFromURL() {
-		return false; // @see shiro
-	}
-
-	@Override
-	public boolean isRequestedSessionIdFromUrl() {
-		return false; // @see shiro
 	}
 
 	@Override
