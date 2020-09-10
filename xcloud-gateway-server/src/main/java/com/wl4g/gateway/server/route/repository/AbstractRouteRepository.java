@@ -16,6 +16,7 @@
 package com.wl4g.gateway.server.route.repository;
 
 import com.google.common.collect.Maps;
+import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.gateway.server.route.IRouteAlterSubscriber;
 import com.wl4g.gateway.server.route.IRouteCacheRefresh;
 import com.wl4g.gateway.server.route.NotifyType;
@@ -28,6 +29,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
+
+import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
+
 import java.util.Map;
 
 /**
@@ -44,6 +48,8 @@ import java.util.Map;
  */
 public abstract class AbstractRouteRepository extends InMemoryRouteDefinitionRepository
 		implements IRouteCacheRefresh, IRouteAlterSubscriber {
+
+	protected final SmartLogger log = getLogger(getClass());
 
 	@Autowired
 	private RefreshRoutesApplicationListener routeAlterHandler;

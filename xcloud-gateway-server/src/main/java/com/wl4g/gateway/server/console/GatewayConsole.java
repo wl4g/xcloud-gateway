@@ -1,10 +1,8 @@
 package com.wl4g.gateway.server.console;
 
 import com.wl4g.components.common.log.SmartLogger;
-import com.wl4g.components.common.serialize.JacksonUtils;
 import com.wl4g.gateway.server.config.RefreshProperties;
 import com.wl4g.gateway.server.console.args.UpdatingRefreshDelayArgument;
-import com.wl4g.gateway.server.route.IRouteCacheRefresh;
 import com.wl4g.gateway.server.route.TimingTaskRefresher;
 import com.wl4g.gateway.server.route.repository.AbstractRouteRepository;
 import com.wl4g.shell.common.annotation.ShellMethod;
@@ -16,6 +14,7 @@ import org.springframework.cloud.gateway.route.RouteDefinition;
 import reactor.core.publisher.Flux;
 
 import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
+import static com.wl4g.components.common.serialize.JacksonUtils.toJSONString;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 
@@ -32,16 +31,13 @@ public class GatewayConsole {
 	final protected SmartLogger log = getLogger(getClass());
 
 	@Autowired
-	protected IRouteCacheRefresh refresher;
-
-	@Autowired
 	protected RefreshProperties config;
 
 	@Autowired
-	private AbstractRouteRepository abstractRouteRepository;
+	private AbstractRouteRepository routeRepository;
 
 	@Autowired
-	protected TimingTaskRefresher coordinator;
+	protected TimingTaskRefresher refresher;
 
 	/**
 	 * Manual refresh gateway configuration all from cache(redis).
@@ -53,12 +49,12 @@ public class GatewayConsole {
 	public void refresh(SimpleShellContext context) {
 		try {
 			context.printf("Refreshing configuration ...");
-			refresher.flushRoutesPermanentToMemery();
+			refresher.getRefresher().flushRoutesPermanentToMemery();
 		} catch (Exception e) {
 			log.error("", e);
 		}
 
-		Flux<RouteDefinition> memeryRoutes = abstractRouteRepository.getRouteDefinitionsByMemery();
+		Flux<RouteDefinition> routes = routeRepository.getRouteDefinitionsByMemery();
 
 		// Print result message.
 		StringBuilder res = new StringBuilder(100);
@@ -67,7 +63,7 @@ public class GatewayConsole {
 		res.append("\t");
 		res.append("----route info----\n"); // TODO
 
-		memeryRoutes.subscribe(route -> res.append(JacksonUtils.toJSONString(route)).append("\n"));
+		routes.subscribe(r -> res.append(toJSONString(r)).append("\n"));
 
 		context.printf(res.toString());
 		context.completed();
@@ -76,17 +72,17 @@ public class GatewayConsole {
 	/**
 	 * Updating refresh delay time.
 	 * 
-	 * @param arg
 	 * @param context
+	 * @param arg
 	 * @return
 	 */
 	@ShellMethod(keys = "updateRefreshDelay", group = DEFAULT_GATEWAY_SHELL_GROUP, help = "Update configuration refresh schedule delay(Ms)")
-	public void updateRefreshDelay(UpdatingRefreshDelayArgument arg, SimpleShellContext context) {
+	public void updateRefreshDelay(SimpleShellContext context, UpdatingRefreshDelayArgument arg) {
 		try {
 			config.setRefreshDelayMs(arg.getRefreshDelayMs());
 
 			// Restart refresher
-			coordinator.restartRefresher();
+			refresher.restartRefresher();
 		} catch (Exception e) {
 			log.error("", e);
 		}

@@ -86,6 +86,10 @@ public class TimingTaskRefresher extends GenericTaskRunner<RunnerProperties> imp
 		createRefreshScheduling();
 	}
 
+	public IRouteCacheRefresh getRefresher() {
+		return refresher;
+	}
+
 	/**
 	 * Creating refresh scheduling.
 	 * 

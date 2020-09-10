@@ -15,7 +15,6 @@
  */
 package com.wl4g.gateway.server.route.repository;
 
-import com.wl4g.components.common.log.SmartLogger;
 import com.wl4g.components.common.serialize.JacksonUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,6 @@ import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import static com.wl4g.components.common.log.SmartLoggerFactory.getLogger;
 
 import java.util.stream.Collectors;
 
@@ -37,8 +34,6 @@ import java.util.stream.Collectors;
  * @since
  */
 public class RedisRouteDefinitionRepository extends AbstractRouteRepository {
-
-	protected SmartLogger log = getLogger(getClass());
 
 	@Autowired
 	private StringRedisTemplate stringTemplate;
