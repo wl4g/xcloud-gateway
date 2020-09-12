@@ -21,13 +21,13 @@ spring:
         max-active: 10
         max-wait: -1ms
 
-## Redis configuration.
-#redis:
-#  passwd: ${REDIS_PASSWD:zzx!@#$%}
-#  connect-timeout: 10000
-#  max-attempts: 10
-#  # Redis's cluster nodes.
-#  nodes: ${REDIS_NODES:owner-node1:6379,owner-node1:6380,owner-node1:6381,owner-node3:6379,owner-node3:6380,owner-node3:6381}
+# Redis configuration.
+redis:
+  passwd: ${REDIS_PASSWD:zzx!@#$%}
+  connect-timeout: 10000
+  max-attempts: 10
+  # Redis's cluster nodes.
+  nodes: ${REDIS_NODES:owner-node1:6379,owner-node1:6380,owner-node1:6381,owner-node3:6379,owner-node3:6380,owner-node3:6381}
 
 my-load-balanced-service:
   ribbon:

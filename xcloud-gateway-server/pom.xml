@@ -44,22 +44,21 @@
 		<!-- </exclusions> -->
 		<!-- </dependency> -->
 
-		<!-- <dependency> -->
-		<!-- <groupId>com.wl4g</groupId> -->
-		<!-- <artifactId>xcloud-iam-client</artifactId> -->
-		<!-- <exclusions> -->
-		<!-- <exclusion> -->
-		<!-- <artifactId>spring-webmvc</artifactId> -->
-		<!-- <groupId>org.springframework</groupId> -->
-		<!-- </exclusion> -->
-		<!-- </exclusions> -->
-		<!-- </dependency> -->
-
-		<!-- WebfluxBridgingServletFilter, which requires -->
-		<!-- <dependency> -->
-		<!-- <groupId>javax.servlet</groupId> -->
-		<!-- <artifactId>javax.servlet-api</artifactId> -->
-		<!-- </dependency> -->
+		<dependency>
+			<groupId>com.wl4g</groupId>
+			<artifactId>xcloud-iam-client</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-webmvc</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- Webflux bridging servlet filter is requires -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-gateway</artifactId>
@@ -74,6 +73,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>io.netty</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
