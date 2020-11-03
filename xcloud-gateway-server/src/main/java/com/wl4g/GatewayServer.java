@@ -20,13 +20,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 
-import com.wl4g.iam.client.annotation.EnableIamClient;
+//import com.wl4g.iam.client.annotation.EnableIamClient;
 import com.wl4g.shell.springboot.annotation.EnableShellServer;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-@EnableIamClient
+//@EnableIamClient
 @EnableShellServer
 // @EnableScmClient
 @SpringBootApplication

@@ -36,17 +36,20 @@
 		<!-- </exclusion> -->
 		<!-- </exclusions> -->
 		<!-- </dependency> -->
-		<dependency>
-			<groupId>com.wl4g</groupId>
-			<artifactId>xcloud-iam-client</artifactId>
-			<version>master</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring-webmvc</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
+		<!-- @see com.wl4g.components.core.web.error.ServletSmartErrorController @ControllerAdvice -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.wl4g</groupId> -->
+		<!-- <artifactId>xcloud-iam-client</artifactId> -->
+		<!-- <version>master</version> -->
+		<!-- <exclusions> -->
+		<!-- <exclusion> -->
+		<!-- <artifactId>spring-webmvc</artifactId> -->
+		<!-- <groupId>org.springframework</groupId> -->
+		<!-- </exclusion> -->
+		<!-- </exclusions> -->
+		<!-- </dependency> -->
+
 		<!-- Webflux bridging servlet filter is requires -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
