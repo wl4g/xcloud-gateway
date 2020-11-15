@@ -1,17 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.wl4g</groupId>
 	<artifactId>xcloud-gateway</artifactId>
+	<version>master</version>
 	<packaging>pom</packaging>
-	<name>XCloud Gateway Services</name>
+	<name>XCloud Gateway</name>
 	<url>http://xcloud.wl4g.com</url>
 	<description>A Open Source enhanced gateway system based on spring cloud.</description>
-	<parent>
-		<groupId>com.wl4g</groupId>
-		<artifactId>xcloud-parent</artifactId>
-		<version>master</version>
-	</parent>
 	<modules>
+		<module>xcloud-gateway-manager</module>
 		<module>xcloud-gateway-server</module>
 		<module>xcloud-gateway-example</module>
 	</modules>
