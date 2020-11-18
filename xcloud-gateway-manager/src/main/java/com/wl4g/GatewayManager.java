@@ -19,7 +19,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.wl4g.components.data.annotation.AutoConfigureComponentsDataSource;
+import com.wl4g.components.data.annotation.EnableComponentsData;
 //import com.wl4g.iam.client.annotation.EnableIamClient;
 import com.wl4g.shell.springboot.annotation.EnableShellServer;
 
@@ -27,7 +27,7 @@ import com.wl4g.shell.springboot.annotation.EnableShellServer;
 // @EnableScmClient
 @EnableShellServer
 @MapperScan({ "com.wl4g.gateway" })
-@AutoConfigureComponentsDataSource
+@EnableComponentsData
 @SpringBootApplication
 public class GatewayManager {
 
